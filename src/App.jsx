@@ -1,5 +1,5 @@
 import './App.css';
-import SelectTemplate from './components/autocomplete'
+import SelectTemplate from './components/SelectTemplate'
 
 function App() {
   return (
