@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/my-rad-report/static/css/main.e6c13ad2.css",
+    "main.js": "/my-rad-report/static/js/main.ab61ab6a.js",
+    "static/js/787.757f4950.chunk.js": "/my-rad-report/static/js/787.757f4950.chunk.js",
+    "index.html": "/my-rad-report/index.html",
+    "main.e6c13ad2.css.map": "/my-rad-report/static/css/main.e6c13ad2.css.map",
+    "main.ab61ab6a.js.map": "/my-rad-report/static/js/main.ab61ab6a.js.map",
+    "787.757f4950.chunk.js.map": "/my-rad-report/static/js/787.757f4950.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.ab61ab6a.js"
+  ]
+}
