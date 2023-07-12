@@ -41,9 +41,6 @@ const diseases = {
     Cholecystectomy: {
       Finding: [
         "Surgically absent.",
-        "The liver is enlarged measuring # cm in craniocaudal diameter.",
-        "Laki po ng atay niyo.",
-        "The liver is {small/mid/large} o ye.",
       ],
       Impression: [],
     },
