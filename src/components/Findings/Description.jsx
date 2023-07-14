@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react";
-import { Button, Modal } from "@mui/material";
-import diseases from "../../data/Diseases";
+import { Button } from "@mui/material";
+import { collection, query, where, getDocs, updateDoc, doc, arrayUnion } from "firebase/firestore";
+import db from '../../config';
+import DescriptionModal from './DescriptionModal'; // import the modal component
 
-function Description({ onValueChange, section, disease }) {
-  const sentences = diseases[section][disease]["Finding"];
-
+function Description({ onValueChange, section, disease, findings, modality}) {
+  // Use 'localFindings' instead of 'findings'
+  const [localFindings, setLocalFindings] = useState(findings);
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
   const [sentenceInputs, setSentenceInputs] = useState({});
   const [currentSentence, setCurrentSentence] = useState("");
 
   const handleClick = () => {
     setCurrentSentenceIndex((prevIndex) => {
-      const newIndex = (prevIndex + 1) % sentences.length;
+      const newIndex = (prevIndex + 1) % localFindings.length;
       return isNaN(newIndex) ? 0 : newIndex;
     });
   };
@@ -21,19 +23,16 @@ function Description({ onValueChange, section, disease }) {
     const updatedInputs = { ...sentenceInputs, [index]: value };
     setSentenceInputs(updatedInputs);
   };
-  const printEditedSentence = () => {
-    console.log(currentSentence);
-  };
 
   const renderSentence = () => {
     console.log("section:", section);
     console.log("disease:", disease);
-    console.log("sentences:", sentences);
+    console.log("localFindings:", localFindings);
     console.log(currentSentenceIndex);
-    if (!sentences || !sentences[currentSentenceIndex]) {
+    if (!localFindings || !localFindings[currentSentenceIndex]) {
       return null;
     }
-    const sentence = sentences[currentSentenceIndex];
+    const sentence = localFindings[currentSentenceIndex];
     console.log("sentence:", sentence);
     const parts = sentence.split(/\{(.*?)\}/g);
     const sentenceOptions = parts.map((part, index) => {
@@ -77,10 +76,8 @@ function Description({ onValueChange, section, disease }) {
   };
 
   useEffect(() => {
-    const sentence = sentences[currentSentenceIndex];
+    const sentence = localFindings[currentSentenceIndex];
     if (!sentence) {
-      // sentence is undefined
-      // do something, or just return
       return;
     }
     const parts = sentence.split(/(\{.*?\})/g);
@@ -97,7 +94,8 @@ function Description({ onValueChange, section, disease }) {
       }
     }
     setCurrentSentence(newSentence);
-  }, [currentSentenceIndex, sentenceInputs, sentences]);
+    onValueChange(newSentence);
+  }, [currentSentenceIndex, sentenceInputs, localFindings, onValueChange]);
 
   const [open, setOpen] = useState(false);
   const [newDescription, setNewDescription] = useState("");
@@ -109,48 +107,45 @@ function Description({ onValueChange, section, disease }) {
     setNewDescription(event.target.value);
   };
 
-  const handleAddNewDescription = () => {
+  const handleAddNewDescription = async (newDescription) => {
     if (newDescription) {
-      diseases[section][disease]["Finding"].push(newDescription);
-      handleClose();
-      setNewDescription("");
+      // Query the Firestore for the disease document
+      const diseasesCollection = collection(db, "diseases");
+      const q = query(
+        diseasesCollection,
+        where("name", "==", disease),
+        where("modality", "==", modality)
+      );
+      const querySnapshot = await getDocs(q);
+  
+      let diseaseDocId = null;
+      querySnapshot.forEach((doc) => {
+        diseaseDocId = doc.id;
+      });
+  
+      if (diseaseDocId) {
+        const diseaseRef = doc(db, "diseases", diseaseDocId);
+  
+        await updateDoc(diseaseRef, {
+          findings: arrayUnion(newDescription),
+        });
+  
+        setLocalFindings((oldFindings) => [...oldFindings, newDescription]);
+      } else {
+        console.error(
+          "No disease document found with the specified name and modality"
+        );
+      }
     }
-  };
-
-  const modalStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bakgroundColor: 'white',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
-
+};
+  
   return (
     <div>
       {renderSentence()}
       <div>
         <Button onClick={handleClick}>CHANGE</Button>
-        <Button onClick={handleOpen}>Add New Description</Button>
+        <DescriptionModal disease={disease} setLocalFindings={setLocalFindings} onAddNewDescription={handleAddNewDescription} findings={localFindings} modality={modality} />
       </div>
-
-      <Modal open={open} onClose={handleClose}>
-        <div style={{ backgroundColor: '#fff', padding: '20px' }}>
-          <h2>Add New Description</h2>
-          <label>Disease: {disease}</label>
-          <div>
-          <textarea 
-            style={{ padding: '10px', minWidth: '500px' }}
-            value={newDescription}
-            onChange={handleNewDescriptionChange}
-          />
-          <Button onClick={handleAddNewDescription}>Add</Button>
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 }

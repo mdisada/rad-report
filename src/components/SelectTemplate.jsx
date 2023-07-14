@@ -1,38 +1,56 @@
 import { Stack, Autocomplete, TextField } from "@mui/material"
-import { useState } from 'react'
-import studies from "../data/StudyTemplates"
+import { useState, useEffect } from 'react'
+import { collection, getDocs } from 'firebase/firestore';
+import db from '../config'
 import FindingsSection from "./FindingsSection"
 
 
 function SelectTemplate () {
 
-  const [study , setStudy] = useState(null)
+  const [studyName , setStudyName] = useState(null)
   const [inputValue, setInputValue] = useState('')
   const [template, setTemplate] = useState({
     label: "",
     modality: "",
     always_contrast: null,
-    sections: [],
+    organ_sections: [],
+    users: "",
   })
+
+  const [studies, setStudies] = useState([]); // Use state for the studies
+  
+  // Fetch the studies from Firestore on component mount
+  useEffect(() => {
+    const fetchStudies = async () => {
+      const studiesCol = collection(db, 'templates');
+      const studiesSnapshot = await getDocs(studiesCol);
+      const studiesList = studiesSnapshot.docs.map(doc => doc.data());
+      setStudies(studiesList);
+    };
+    
+    fetchStudies();
+  }, []);
 
   const handleOnChange = (_, newValue) => {
     // Check if newValue is null
     if (newValue) {
-      setStudy(newValue);
+      setStudyName(newValue);
       setTemplate({
         label: newValue.label,
         modality: newValue.modality,
         always_contrast: newValue.always_contrast,
-        sections: newValue.sections
+        organ_sections: newValue.organ_sections || [],
+        users: newValue.users
       });
     } else {
       // If newValue is null, reset study and template
-      setStudy(null);
+      setStudyName(null);
       setTemplate({
         label: "",
         modality: "",
         always_contrast: null,
-        sections: [],
+        organ_sections: [],
+        users: "",
       });
     }
   };
@@ -41,10 +59,10 @@ function SelectTemplate () {
       <Autocomplete 
       options={studies} 
       renderInput={(params) => <TextField {...params}
-      label = 'Templates' />}
+            label = 'Templates' />}
       autoSelect = {true}
       autoComplete = {true}
-      study = {study}
+      studyName = {studyName}
       onChange={handleOnChange}
         inputValue={inputValue}
         onInputChange={(_, newInputValue) => {

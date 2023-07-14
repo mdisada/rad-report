@@ -10,7 +10,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import NormalOrAbnormal from "./Findings/NormalOrAbnormal";
 import { useState, useEffect } from "react";
 
-export default function Organ({ section }) {
+export default function Organ({ section , modality }) {
   const name = section.charAt(0).toUpperCase() + section.slice(1);
   const [forDisplay, setForDisplay] = useState([""]); // initialize forDisplay in state
   const [receivedFinding, setReceivedFinding] = useState("");
@@ -64,6 +64,8 @@ export default function Organ({ section }) {
   let normalDisplay = defValue + normal;
   let display = normal ? normalDisplay : abnormalDisplay; 
  
+    
+  console.log(modality)
 
   return (
     <div>
@@ -86,6 +88,7 @@ export default function Organ({ section }) {
             onNormal={onNormal}
             onAbnormal={onAbnormal}
             section={section}
+            modality={modality}
           />
           {isAbnormal && (
             <Stack spacing={2} direction="row">

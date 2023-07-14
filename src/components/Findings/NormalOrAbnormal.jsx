@@ -4,7 +4,7 @@ import { useState } from 'react'
 import AddFindings from './AddFindings';
 
 
-function NormalOrAbnormal({onValueChange, onNormal, onAbnormal, section}) {
+function NormalOrAbnormal({onValueChange, onNormal, onAbnormal, section, modality}) {
     
     const [selectedOption, setSelectedOption] = useState('');
 
@@ -22,7 +22,7 @@ function NormalOrAbnormal({onValueChange, onNormal, onAbnormal, section}) {
     const renderAddFindings = () => {
       if (selectedOption === 'abnormal') {
 
-        return <AddFindings onValueChange={onValueChange} section={section}/>;
+        return <AddFindings onValueChange={onValueChange} section={section} modality={modality}/>;
       }
       return null;
     };
