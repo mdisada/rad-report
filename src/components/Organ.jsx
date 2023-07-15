@@ -8,19 +8,20 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import NormalOrAbnormal from "./Findings/NormalOrAbnormal";
-import { useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
+import { ReportFindingsContext } from "../contexts/ReportFindingsContext";
 
-export default function Organ({ section , modality }) {
+export default function Organ({ section , modality, onDisplayChange }) {
   const name = section.charAt(0).toUpperCase() + section.slice(1);
   const [forDisplay, setForDisplay] = useState([""]); // initialize forDisplay in state
   const [receivedFinding, setReceivedFinding] = useState("");
   const [normal, setNormal] = useState("");
   const [isAbnormal, setIsAbnormal] = useState(false); // New state for abnormal
   const [expanded, setExpanded] = useState(true); // New state variable for accordion expanded status
+  const { state: reportFindings, dispatch } = useContext(ReportFindingsContext);
 
   const onValueChange = (finding) => {
     setReceivedFinding(finding);
-    console.log(receivedFinding);
   };
 
   const onNormal = (normalDisplay) => {
@@ -32,11 +33,19 @@ export default function Organ({ section , modality }) {
     setIsAbnormal(true);
   };
 
+  let defValue = name + ": ";
+  let abnormalDisplay = defValue + forDisplay.join("");
+  let normalDisplay = defValue + normal;
+  let display = normal ? normalDisplay : abnormalDisplay; 
+
+
   useEffect(() => {
     if (normal !== "") {
       setExpanded(false);
-    }
-  }, [normal]);
+    };
+    dispatch({ type: "ADD_FINDING", payload: { section, display } });
+  }, [normal, display, section, dispatch]);
+
 
   const handleAddClick = () => {
     setForDisplay((prevForDisplay) => [
@@ -59,13 +68,11 @@ export default function Organ({ section , modality }) {
     setExpanded(isExpanded);
   };
 
-  let defValue = name + ": ";
-  let abnormalDisplay = defValue + forDisplay.join("");
-  let normalDisplay = defValue + normal;
-  let display = normal ? normalDisplay : abnormalDisplay; 
- 
+
+  useEffect(() => {
+    onDisplayChange(display);
+  }, [display, onDisplayChange]);
     
-  console.log(modality)
 
   return (
     <div>
@@ -93,10 +100,10 @@ export default function Organ({ section , modality }) {
           {isAbnormal && (
             <Stack spacing={2} direction="row">
               <Button variant="contained" onClick={handleAddClick}>
-                Add
+                Add to report
               </Button>
               <Button variant="outlined" onClick={handleRemoveClick}>
-                Remove
+                Remove from report
               </Button>
             </Stack>
           )}

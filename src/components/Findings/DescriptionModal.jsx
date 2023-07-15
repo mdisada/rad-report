@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Modal } from "@mui/material";
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from "@mui/material";
 import { updateDoc, arrayUnion, doc, collection, query, where, getDocs } from 'firebase/firestore';
 import db from '../../config';
 
@@ -51,21 +51,22 @@ function DescriptionModal({ disease, setLocalFindings, modality }) {
   return (
     <>
       <Button onClick={handleOpen}>Add New Description</Button>
-      <Modal open={open} onClose={handleClose}>
-        <div style={{ backgroundColor: '#fff', padding: '20px' }}>
-          <h3>Add New Description</h3>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Add New Description</DialogTitle>
+        <DialogContent>
           <label>Disease: {disease}</label>
-          <div>
-            <textarea 
-              style={{ padding: '10px', minWidth: '500px' }}
-              value={newDescription}
-              onChange={handleNewDescriptionChange}
-            />
-           <Button onClick={() => handleAddNewDescription(newDescription)}>Add</Button>
-
-          </div>
-        </div>
-      </Modal>
+          <TextField
+            multiline
+            fullWidth
+            value={newDescription}
+            onChange={handleNewDescriptionChange}
+            style={{ marginBottom: '20px' }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleAddNewDescription(newDescription)}>Add</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
