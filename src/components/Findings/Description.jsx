@@ -4,9 +4,11 @@ import { collection, query, where, getDocs, updateDoc, doc, arrayUnion } from "f
 import db from '../../config';
 import DescriptionModal from './DescriptionModal'; // import the modal component
 
-function Description({ onValueChange, section, disease, findings, modality}) {
+function Description({ onValueChange, section, modality, disease, diseaseMap}) {
   // Use 'localFindings' instead of 'findings'
-  const [localFindings, setLocalFindings] = useState(findings);
+  const findings = diseaseMap[disease];
+
+  const [localFindings, setLocalFindings] = useState(diseaseMap[disease] || []);
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
   const [sentenceInputs, setSentenceInputs] = useState({});
   const [currentSentence, setCurrentSentence] = useState("");
@@ -25,15 +27,11 @@ function Description({ onValueChange, section, disease, findings, modality}) {
   };
 
   const renderSentence = () => {
-    console.log("section:", section);
-    console.log("disease:", disease);
-    console.log("localFindings:", localFindings);
-    console.log(currentSentenceIndex);
+
     if (!localFindings || !localFindings[currentSentenceIndex]) {
       return null;
     }
     const sentence = localFindings[currentSentenceIndex];
-    console.log("sentence:", sentence);
     const parts = sentence.split(/\{(.*?)\}/g);
     const sentenceOptions = parts.map((part, index) => {
       if (part.includes("/")) {
@@ -76,6 +74,11 @@ function Description({ onValueChange, section, disease, findings, modality}) {
   };
 
   useEffect(() => {
+    setLocalFindings(diseaseMap[disease] || []);
+  }, [disease, diseaseMap]);
+  
+
+  useEffect(() => {
     const sentence = localFindings[currentSentenceIndex];
     if (!sentence) {
       return;
@@ -113,7 +116,7 @@ function Description({ onValueChange, section, disease, findings, modality}) {
       const diseasesCollection = collection(db, "diseases");
       const q = query(
         diseasesCollection,
-        where("name", "==", disease),
+        where("name", "==", disease), // not disease.name
         where("modality", "==", modality)
       );
       const querySnapshot = await getDocs(q);
