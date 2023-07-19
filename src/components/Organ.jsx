@@ -1,23 +1,17 @@
-import {
-  Stack,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  TextField,
-  Button,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import NormalOrAbnormal from "./Findings/NormalOrAbnormal";
-import { useContext, useState, useEffect } from "react";
-import { ReportFindingsContext } from "../contexts/ReportFindingsContext";
+import { Stack } from '@mui/material'
+import React, { useContext, useState, useEffect } from 'react'
+import { EditableText, Button, Collapse, Icon } from "@blueprintjs/core"
+import { IconNames } from "@blueprintjs/icons"
+import NormalOrAbnormal from "./Findings/NormalOrAbnormal"
+import { ReportFindingsContext } from "../contexts/ReportFindingsContext"
 
-export default function Organ({ section , modality, onDisplayChange }) {
+export default function Organ({ section, modality, onDisplayChange }) {
   const name = section.charAt(0).toUpperCase() + section.slice(1);
-  const [forDisplay, setForDisplay] = useState([""]); // initialize forDisplay in state
+  const [forDisplay, setForDisplay] = useState([""]); 
   const [receivedFinding, setReceivedFinding] = useState("");
   const [normal, setNormal] = useState("");
-  const [isAbnormal, setIsAbnormal] = useState(false); // New state for abnormal
-  const [expanded, setExpanded] = useState(true); // New state variable for accordion expanded status
+  const [isAbnormal, setIsAbnormal] = useState(false); 
+  const [isOpen, setIsOpen] = useState(true); 
   const { state: reportFindings, dispatch } = useContext(ReportFindingsContext);
 
   const onValueChange = (finding) => {
@@ -25,7 +19,7 @@ export default function Organ({ section , modality, onDisplayChange }) {
   };
 
   const onNormal = (normalDisplay) => {
-    setNormal(normalDisplay)
+    setNormal(normalDisplay);
     setIsAbnormal(false);
   };
 
@@ -36,79 +30,79 @@ export default function Organ({ section , modality, onDisplayChange }) {
   let defValue = name + ": ";
   let abnormalDisplay = defValue + forDisplay.join("");
   let normalDisplay = defValue + normal;
-  let display = normal ? normalDisplay : abnormalDisplay; 
-
+  let display = normal ? normalDisplay : abnormalDisplay;
 
   useEffect(() => {
     if (normal !== "") {
-      setExpanded(false);
-    };
+      setIsOpen(false);
+    }
     dispatch({ type: "ADD_FINDING", payload: { section, display } });
   }, [normal, display, section, dispatch]);
-
 
   const handleAddClick = () => {
     setForDisplay((prevForDisplay) => [
       ...prevForDisplay,
       receivedFinding,
       " ",
-    ]); // add new receivedFinding to forDisplay array
+    ]); 
 
-    // Check if normal is not an empty string, if it's not, collapse the accordion
     if (normal !== "") {
-      setExpanded(false);
+      setIsOpen(false);
     }
   };
 
   const handleRemoveClick = () => {
-    setForDisplay((prevForDisplay) => prevForDisplay.slice(0, -2)); // remove the last two elements (receivedFinding and space) from forDisplay array
+    setForDisplay((prevForDisplay) => prevForDisplay.slice(0, -2)); 
   };
 
-  const handleAccordionChange = (event, isExpanded) => {
-    setExpanded(isExpanded);
+  const handleLockClick = () => {
+    setIsOpen(!isOpen);
   };
-
 
   useEffect(() => {
     onDisplayChange(display);
   }, [display, onDisplayChange]);
-    
-
+ 
   return (
     <div>
-      <Accordion expanded={expanded} onChange={handleAccordionChange}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <TextField 
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Button 
+          icon={<Icon icon={isOpen ? IconNames.UNLOCK : IconNames.LOCK} size={15} />} 
+          minimal={true}
+          onClick={handleLockClick}
+          style={{ marginRight: '7px' }}
+
+        />
+        <div style={{ flexGrow: 1 }}>
+          <EditableText
             value={display}
-            variant="standard" 
-            onChange={(e) => setForDisplay([e.target.value.slice(defValue.length)])} 
-            fullWidth
+            onChange={(value) => setForDisplay([value.slice(defValue.length)])}
+            multiline={true}
+            maxLines={5}
+            style={{ width: '100%'}}
+            disabled={!isOpen}
           />
-        </AccordionSummary>
-        <AccordionDetails>
-          <NormalOrAbnormal
-            onValueChange={onValueChange}
-            onNormal={onNormal}
-            onAbnormal={onAbnormal}
-            section={section}
-            modality={modality}
-          />
-          {isAbnormal && (
-            <Stack spacing={2} direction="row">
-              <Button variant="contained" onClick={handleAddClick}>
-                Add to report
-              </Button>
-              <Button variant="outlined" onClick={handleRemoveClick}>
-                Remove from report
-              </Button>
-            </Stack>
-          )}
-        </AccordionDetails>
-      </Accordion>
+        </div>
+      </div>
+      <Collapse isOpen={isOpen}>
+        <NormalOrAbnormal
+          onValueChange={onValueChange}
+          onNormal={onNormal}
+          onAbnormal={onAbnormal}
+          section={section}
+          modality={modality}
+        />
+        {isAbnormal && (
+          <Stack spacing={2} direction="row">
+            <Button intent="primary" onClick={handleAddClick}>
+              Add to report
+            </Button>
+            <Button intent="danger" onClick={handleRemoveClick}>
+              Remove from report
+            </Button>
+          </Stack>
+        )}
+      </Collapse>
     </div>
-  );
+  )
 }
