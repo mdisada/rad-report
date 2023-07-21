@@ -2,20 +2,21 @@ import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import db from '../../../config';
-import DescriptionModal from './DescriptionModal';
 import { Select } from "@blueprintjs/select";
 import { MenuItem , FormGroup, InputGroup } from "@blueprintjs/core";
 
 
-function Description({ onValueChange, section, modality }) {
+function NormalDescription({ onValueChange, section, modality }) {
   const [sentences, setSentences] = useState([]);
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
   const [sentenceInputs, setSentenceInputs] = useState({});
   const [currentDescription, setCurrentDescription] = useState("");
   const [currentSentence, setCurrentSentence] = useState("");
+  console.log('hi')
 
   const fetchSentences = async () => {
     const normalCollection = collection(db, "normal");
+
     const q = query(
       normalCollection,
       where("organ_section", "==", section),
@@ -62,7 +63,7 @@ function Description({ onValueChange, section, modality }) {
 
   useEffect(() => {
     fetchSentences();
-  }, [disease, modality]);
+  }, [section, modality]);
 
   useEffect(() => {
     if (sentences.length > 0) {
@@ -160,15 +161,9 @@ function Description({ onValueChange, section, modality }) {
       {renderCurrentSentence()}
       <div>
         <Button onClick={handleClick}>CHANGE</Button>
-        <DescriptionModal
-  disease={disease}
-  modality={modality}
-  onAddNewDescription={fetchSentences}
-  setCurrentDescription={setCurrentDescription}
-        />
       </div>
     </div>
   );
 }
 
-export default Description;
+export default NormalDescription;

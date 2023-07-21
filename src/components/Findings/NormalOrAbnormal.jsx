@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import {FormGroup, RadioGroup, Radio} from '@blueprintjs/core'
 import AddFindings from './AddFindings';
+import NormalDescription from './Normal/NormalDescription';
 //import { Radio, RadioGroup } from 
 
 
@@ -21,8 +22,10 @@ function NormalOrAbnormal({onValueChange, onNormal, onAbnormal, section, modalit
     };
     const renderAddFindings = () => {
       if (selectedOption === 'abnormal') {
-
         return <AddFindings onValueChange={onValueChange} section={section} modality={modality}/>;
+      }
+      if (selectedOption === 'normal') {
+        return <NormalDescription onValueChange={onValueChange} section={section} modality={modality}/>
       }
       return null;
     };
