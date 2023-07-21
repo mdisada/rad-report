@@ -32,12 +32,12 @@ export default function Organ({ section, modality, onDisplayChange }) {
   let normalDisplay = defValue + normal;
   let display = normal ? normalDisplay : abnormalDisplay;
 
-  useEffect(() => {
-    if (normal !== "") {
-      setIsOpen(false);
-    }
-    dispatch({ type: "ADD_FINDING", payload: { section, display } });
-  }, [normal, display, section, dispatch]);
+  // useEffect(() => {
+  //   if (normal !== "") {
+  //     setIsOpen(false);
+  //   }
+  //   dispatch({ type: "ADD_FINDING", payload: { section, display } });
+  // }, [normal, display, section, dispatch]);
 
   const handleAddClick = () => {
     setForDisplay((prevForDisplay) => [
@@ -45,10 +45,6 @@ export default function Organ({ section, modality, onDisplayChange }) {
       receivedFinding,
       " ",
     ]); 
-
-    if (normal !== "") {
-      setIsOpen(false);
-    }
   };
 
   const handleRemoveClick = () => {
@@ -92,7 +88,6 @@ export default function Organ({ section, modality, onDisplayChange }) {
           section={section}
           modality={modality}
         />
-        {isAbnormal && (
           <Stack spacing={2} direction="row">
             <Button intent="primary" onClick={handleAddClick}>
               Add to report
@@ -101,7 +96,6 @@ export default function Organ({ section, modality, onDisplayChange }) {
               Remove from report
             </Button>
           </Stack>
-        )}
       </Collapse>
     </div>
   )

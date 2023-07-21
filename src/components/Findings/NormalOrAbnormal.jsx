@@ -1,7 +1,7 @@
-
-import { FormControl, RadioGroup, Radio, FormControlLabel } from '@mui/material';
 import { useState } from 'react'
+import {FormGroup, RadioGroup, Radio} from '@blueprintjs/core'
 import AddFindings from './AddFindings';
+//import { Radio, RadioGroup } from 
 
 
 function NormalOrAbnormal({onValueChange, onNormal, onAbnormal, section, modality}) {
@@ -11,7 +11,7 @@ function NormalOrAbnormal({onValueChange, onNormal, onAbnormal, section, modalit
     const handleOptionChange = (event) => {
       setSelectedOption(event.target.value);
       if (event.target.value === 'normal') {
-        onNormal(' Grossly unremarkable');
+        onNormal();
       } else {
         onNormal("")
         onValueChange('');
@@ -29,23 +29,21 @@ function NormalOrAbnormal({onValueChange, onNormal, onAbnormal, section, modalit
 
 
   return (
-    <FormControl>
-        <RadioGroup row>
-        <FormControlLabel value="normal" control={
+    <div>
+        <RadioGroup inline={true} onChange={handleOptionChange} selectedValue={selectedOption} >
             <Radio 
-                onChange={handleOptionChange}
-                checked={selectedOption === 'normal'}
-                />} label="Normal" />
-        <FormControlLabel value="abnormal" control={
+                value={'normal'}
+                label='Normal'
+                /> 
+        
         <Radio 
-            onChange={handleOptionChange}
-            checked={selectedOption === 'abnormal'}
-            />} label="Abnormal" />      
+            value={'abnormal'}
+            label='Abnormal'
+            />    
         </RadioGroup>
 
-
         {renderAddFindings()}
-    </FormControl>
+    </div>
      );
 }
 

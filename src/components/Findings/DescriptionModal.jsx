@@ -3,7 +3,7 @@ import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } 
 import { updateDoc, arrayUnion, doc, collection, query, where, getDocs } from 'firebase/firestore';
 import db from '../../config';
 
-function DescriptionModal({ disease, setLocalFindings, modality }) {
+function DescriptionModal({ disease, setCurrentDescription, onAddNewDescription, setLocalFindings, modality }) {
   const [open, setOpen] = useState(false);
   const [newDescription, setNewDescription] = useState("");
 
@@ -38,6 +38,8 @@ function DescriptionModal({ disease, setLocalFindings, modality }) {
         });
   
         setLocalFindings((oldFindings) => [...oldFindings, newDescription]);
+        setCurrentDescription(newDescription);
+        onAddNewDescription();
         handleClose();
       
       } else {

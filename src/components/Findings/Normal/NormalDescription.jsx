@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import db from '../../config';
+import db from '../../../config';
 import DescriptionModal from './DescriptionModal';
 import { Select } from "@blueprintjs/select";
 import { MenuItem , FormGroup, InputGroup } from "@blueprintjs/core";
 
-const SelectItem = Select.ofType();
 
-function Description({ onValueChange, section, modality, disease }) {
+function Description({ onValueChange, section, modality }) {
   const [sentences, setSentences] = useState([]);
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
   const [sentenceInputs, setSentenceInputs] = useState({});
@@ -16,17 +15,17 @@ function Description({ onValueChange, section, modality, disease }) {
   const [currentSentence, setCurrentSentence] = useState("");
 
   const fetchSentences = async () => {
-    const diseasesCollection = collection(db, "diseases");
+    const normalCollection = collection(db, "normal");
     const q = query(
-      diseasesCollection,
-      where("name", "==", disease),
+      normalCollection,
+      where("organ_section", "==", section),
       where("modality", "==", modality)
     );
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
-      const diseaseDoc = querySnapshot.docs[0];
-      const data = diseaseDoc.data();
+      const normalDoc = querySnapshot.docs[0];
+      const data = normalDoc.data();
       const findings = data.findings || [];
       setSentences(findings);
     } else {
@@ -95,6 +94,7 @@ function Description({ onValueChange, section, modality, disease }) {
             const options = part.replace(/[\{\}]/g, "").split("/");
             const initialText = options[0]; // Extract initial text
             return (
+              
 <FormGroup key={index} inline={true}>
   <Select
     items={options}

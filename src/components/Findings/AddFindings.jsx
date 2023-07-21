@@ -37,7 +37,7 @@ function AddFindings({onValueChange, section, modality}) {
       <MenuItem
         active={modifiers.active}
         disabled={modifiers.disabled}
-        label={disease.modality}
+        //label={disease.modality}
         key={disease.name}
         onClick={handleClick}
         text={disease.name}
@@ -70,6 +70,8 @@ function AddFindings({onValueChange, section, modality}) {
         itemRenderer={renderDisease}
         onItemSelect={handleDiseaseSelect}
         inputValueRenderer={disease => disease.name}
+
+        popoverProps={{ matchTargetWidth: true, minimal: true, usePortal: true, fill: true }}
       />
       <Dialog
         isOpen={isDialogOpen}
