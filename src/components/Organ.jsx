@@ -11,7 +11,7 @@ export default function Organ({ section, modality, onDisplayChange }) {
   const [forDisplay, setForDisplay] = useState(name + ": "); 
   const [receivedFinding, setReceivedFinding] = useState("");
   const [receivedImpression, setReceivedImpression] = useState("")
-  const [newImpression, setNewImpression] = useState([""])
+  const [impression, setImpression] = useState([""])
   const [isOpen, setIsOpen] = useState(true); 
   const { state: reportFindings, dispatch } = useContext(ReportFindingsContext);
 
@@ -22,8 +22,8 @@ export default function Organ({ section, modality, onDisplayChange }) {
     setReceivedFinding(finding);
   };
 
-  const handleReceivedImpression = (newImpression) => {
-    setReceivedImpression(newImpression)
+  const handleReceivedImpression = (impression) => {
+    setReceivedImpression(impression)
   }
 
   const handleAddClick = () => {
@@ -93,7 +93,7 @@ export default function Organ({ section, modality, onDisplayChange }) {
             <Tab id="findings" title="Findings" panel={
               <AddFindings
                 onValueChange={onValueChange}
-                setNewImpression={setNewImpression}
+                setImpression={setImpression}
                 section={section}
                 modality={modality}
               />
@@ -103,7 +103,7 @@ export default function Organ({ section, modality, onDisplayChange }) {
               onValueChange={onValueChange}
               section={section}
               modality={modality}
-              newImpression={newImpression}
+              impression={impression}
               />
             }  />
           </Tabs>

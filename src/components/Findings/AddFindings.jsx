@@ -5,12 +5,13 @@ import { collection, addDoc, getDocs, query, where, setDoc, doc } from "firebase
 import db from '../../config';
 import Description from './Description';
 
-function AddFindings({onValueChange, section, modality, setNewImpression}) {
+function AddFindings({onValueChange, section, modality, setImpression}) {
   const [diseases, setDiseases] = useState([]);
   const [disease, setDisease] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newDisease, setNewDisease] = useState("");
   const [newFinding, setNewFinding] = useState([""]);
+  const [newImpression, setNewImpression] = useState("")
   const [diseaseMap, setDiseaseMap] = useState({});
 
   const fetchData = async () => {
@@ -69,7 +70,7 @@ function AddFindings({onValueChange, section, modality, setNewImpression}) {
       setNewDisease(selectedItem);
     } else if (selectedItem !== null && typeof selectedItem === 'object') {
       setDisease(selectedItem.name);
-      setNewImpression(selectedItem.impression)
+      setImpression(selectedItem.impression)
 
       // Pass selected disease name to parent component.
       onValueChange(selectedItem.name);
@@ -116,7 +117,7 @@ function AddFindings({onValueChange, section, modality, setNewImpression}) {
     const newDiseaseData = {
       name: newDisease,
       findings: newFinding,
-      impression: impression,
+      impression: newImpression,
       modality: modality,
       organ_section: section,
     };
@@ -187,6 +188,14 @@ function AddFindings({onValueChange, section, modality, setNewImpression}) {
           ))}
                     <Button onClick={handleAddNewFindingClick}>+ finding</Button>
           <Button onClick={handleRemoveNewFindingClick}>- finding</Button>
+          <InputGroup
+            id="text-input"
+            aria-label="Impression"
+            placeholder="Impression"
+            value={newImpression}
+            // onChange={handleNewDiseaseChange}
+            onChange={(e) => setNewImpression(e.target.value)}
+          />
         </div>
         <div className="bp3-dialog-footer">
           <div className="bp3-dialog-footer-actions">

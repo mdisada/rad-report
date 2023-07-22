@@ -1,18 +1,16 @@
 import './App.css';
 import SelectTemplate from './components/SelectTemplate'
-import { useState } from 'react'
-import { ReportFindingsContext } from './contexts/ReportFindingsContext';
 import NavBar from './components/NavBar';
-function App() {
+import { ReportFindingsProvider } from './contexts/ReportFindingsContext';
 
-  const [reportFindings, setReportFindings] = useState({}); // Initialize your state here
+function App() {
 
   return (
     <div className="App">
       <NavBar />
-<ReportFindingsContext.Provider value={{ state: reportFindings, dispatch: setReportFindings }}>
-      <SelectTemplate />
-      </ReportFindingsContext.Provider>
+      <ReportFindingsProvider>
+              <SelectTemplate />
+      </ReportFindingsProvider>
     </div>
   );
 }
