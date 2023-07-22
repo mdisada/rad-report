@@ -7,7 +7,7 @@ import Description from './Description';
 
 function AddFindings({onValueChange, section, modality, setImpression}) {
   const [diseases, setDiseases] = useState([]);
-  const [disease, setDisease] = useState(null);
+  const [disease, setDisease] = useState("Normal");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newDisease, setNewDisease] = useState("");
   const [newFinding, setNewFinding] = useState([""]);
@@ -58,9 +58,7 @@ function AddFindings({onValueChange, section, modality, setImpression}) {
     );
   };
 
-  // const handleDiseaseSelect = (disease) => {
-  //   setDisease(disease.name);
-  // };
+
 
   const handleDiseaseSelect = (selectedItem) => {
     if (typeof selectedItem === 'string') {
@@ -71,8 +69,6 @@ function AddFindings({onValueChange, section, modality, setImpression}) {
     } else if (selectedItem !== null && typeof selectedItem === 'object') {
       setDisease(selectedItem.name);
       setImpression(selectedItem.impression)
-
-      // Pass selected disease name to parent component.
       onValueChange(selectedItem.name);
 
     } else {

@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import db from '../../config';
-import DescriptionModal from './DescriptionModal';
+import db from "../../config";
+import DescriptionModal from "./DescriptionModal";
 import { Select } from "@blueprintjs/select";
-import { MenuItem , FormGroup, InputGroup } from "@blueprintjs/core";
-
+import { MenuItem, FormGroup, InputGroup } from "@blueprintjs/core";
 
 function Description({ onValueChange, section, modality, disease }) {
   const [sentences, setSentences] = useState([]);
@@ -79,13 +78,12 @@ function Description({ onValueChange, section, modality, disease }) {
       });
       setSentenceInputs(newSentenceInputs);
     }
-  }, [sentences, currentSentenceIndex])
-
+  }, [sentences, currentSentenceIndex]);
 
   const renderCurrentSentence = () => {
     const sentence = sentences[currentSentenceIndex];
-    if (!sentence) return null; 
-  
+    if (!sentence) return null;
+
     const parts = sentence.split(/(\{.*?\}|#)/g);
     return (
       <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
@@ -94,14 +92,16 @@ function Description({ onValueChange, section, modality, disease }) {
             const options = part.replace(/[\{\}]/g, "").split("/");
             const initialText = options[0]; // Extract initial text
             return (
-<select value={sentenceInputs[index] || ""} onChange={(e) => handleSelectChange(e.target.value, index)}>
-  {options.map((option, i) => (
-    <option key={i} value={option}>
-      {option}
-    </option>
-  ))}
-</select>
-
+              <select
+                value={sentenceInputs[index] || ""}
+                onChange={(e) => handleSelectChange(e.target.value, index)}
+              >
+                {options.map((option, i) => (
+                  <option key={i} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
             );
           } else if (part === "#") {
             return (
@@ -110,7 +110,7 @@ function Description({ onValueChange, section, modality, disease }) {
                 type="text"
                 value={sentenceInputs[index] || ""}
                 onChange={(event) => handleInputChange(event, index)}
-                style={{ margin: '0 5px' }} // Add some space around inputs
+                style={{ margin: "0 5px" }} // Add some space around inputs
               />
             );
           }
@@ -119,31 +119,31 @@ function Description({ onValueChange, section, modality, disease }) {
       </div>
     );
   };
-  
-    useEffect(() => {
-      if (sentences.length === 0) {
-        onValueChange("");
-        return;
-      }
-      
-  
-      const sentence = sentences[currentSentenceIndex];
-      if (sentence) {
-        const parts = sentence.split(/(\{.*?\}|#)/g);
-  
-        const newSentence = parts.map((part, index) => {
+
+  useEffect(() => {
+    if (sentences.length === 0) {
+      onValueChange("");
+      return;
+    }
+
+    const sentence = sentences[currentSentenceIndex];
+    if (sentence) {
+      const parts = sentence.split(/(\{.*?\}|#)/g);
+
+      const newSentence = parts
+        .map((part, index) => {
           if (part.includes("{") && part.includes("}")) {
             return sentenceInputs[index] || part;
           } else if (part === "#") {
             return sentenceInputs[index] || part;
           }
           return part;
-        }).join('');
-  
-        onValueChange(newSentence);
-      }
-    }, [currentSentenceIndex, sentenceInputs, sentences, onValueChange]);
+        })
+        .join("");
 
+      onValueChange(newSentence);
+    }
+  }, [currentSentenceIndex, sentenceInputs, sentences, onValueChange]);
 
   return (
     <div>
@@ -151,10 +151,10 @@ function Description({ onValueChange, section, modality, disease }) {
       <div>
         <Button onClick={handleClick}>CHANGE</Button>
         <DescriptionModal
-  disease={disease}
-  modality={modality}
-  onAddNewDescription={fetchSentences}
-  setCurrentDescription={setCurrentDescription}
+          disease={disease}
+          modality={modality}
+          onAddNewDescription={fetchSentences}
+          setCurrentDescription={setCurrentDescription}
         />
       </div>
     </div>

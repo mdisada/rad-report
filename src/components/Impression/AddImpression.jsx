@@ -1,8 +1,8 @@
 
 
 
-function AddImpression({newImpression, section, modality}) {
-    console.log(newImpression)
+function AddImpression({newImpression}) {
+
 return (
 <h1> HELLO!! </h1>
     )

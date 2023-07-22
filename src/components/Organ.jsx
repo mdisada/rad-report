@@ -49,8 +49,8 @@ export default function Organ({ section, modality, onDisplayChange }) {
 
 
   useEffect(() => {
-    onDisplayChange(forDisplay);
-  }, [forDisplay, onDisplayChange]);
+    onDisplayChange(section, forDisplay);
+  }, [forDisplay, onDisplayChange, section]);
 
   return (
     <div>

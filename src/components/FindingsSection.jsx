@@ -7,14 +7,15 @@ function FindingsSection(props) {
   const template = props.template;
   const sections = template.organ_sections;
   const modality = template.modality;
-  const { state: reportFindings } = useContext(ReportFindingsContext);
+  const { state: reportFindings, dispatch } = useContext(ReportFindingsContext);
 
-  const handleDisplayChange = (newDisplay) => {
-    console.log("New display: ", newDisplay);
+  const handleDisplayChange = (section, newDisplay) => {
+    dispatch({ type: "ADD_FINDING", payload: { section, display: newDisplay } });
   };
 
   const handleGenerateReport = () => {
     console.log(reportFindings);
+    console.log('hi' )
   };
 
   const listSections = sections.map((section) => (
@@ -32,7 +33,7 @@ function FindingsSection(props) {
   return (
     <div>
       {listSections}
-      <Button onClick={handleGenerateReport}>Generate Report</Button>
+      <Button onClick={handleGenerateReport}>Generate</Button>
     </div>
   );
 }
