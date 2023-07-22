@@ -1,7 +1,13 @@
-import React from 'react';
+import { useState } from 'react';
 import { Alignment, Button, Navbar } from "@blueprintjs/core";
+import SettingsMenu from './Menu/SettingsMenu';
 
 const NavBar = () => {
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+
+    const handleSettingsOpen = () => setIsSettingsOpen(true);
+    const handleSettingsClose = () => setIsSettingsOpen(false);
+
   return (
     <Navbar className="bp5-navbar bp5-dark">
       <Navbar.Group align={Alignment.LEFT}>
@@ -10,8 +16,9 @@ const NavBar = () => {
       </Navbar.Group>
 
       <Navbar.Group align={Alignment.RIGHT}>
-        <Button className="bp5-minimal" icon="cog"/>
+        <Button id="Settings" className="bp5-minimal" icon="cog" onClick={handleSettingsOpen}/>
       </Navbar.Group>
+      <SettingsMenu isOpen={isSettingsOpen} onClose={handleSettingsClose} />
     </Navbar>
   );
 };
