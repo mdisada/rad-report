@@ -18,7 +18,7 @@ function FindingsSection(props) {
   };
 
   const listSections = sections.map((section) => (
-    <div style={{ paddingBottom: "10px" }}>
+    <div style={{ paddingBottom: "50px" }}>
       {" "}
       {/* Add padding to each Organ component */}
       <Organ

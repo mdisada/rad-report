@@ -11,7 +11,7 @@ const NavBar = () => {
   return (
     <Navbar className="bp5-navbar bp5-dark">
       <Navbar.Group align={Alignment.LEFT}>
-        <Navbar.Heading>Rad Report</Navbar.Heading>
+        <Navbar.Heading>😎  Rad Report</Navbar.Heading>
         <Navbar.Divider />
       </Navbar.Group>
 

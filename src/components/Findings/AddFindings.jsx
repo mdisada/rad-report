@@ -5,12 +5,12 @@ import { collection, addDoc, getDocs, query, where, setDoc, doc } from "firebase
 import db from '../../config';
 import Description from './Description';
 
-function AddFindings({onValueChange, section, modality}) {
+function AddFindings({onValueChange, section, modality, setNewImpression}) {
   const [diseases, setDiseases] = useState([]);
   const [disease, setDisease] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newDisease, setNewDisease] = useState("");
-  const [newFinding, setNewFinding] = useState([""]); 
+  const [newFinding, setNewFinding] = useState([""]);
   const [diseaseMap, setDiseaseMap] = useState({});
 
   const fetchData = async () => {
@@ -69,8 +69,11 @@ function AddFindings({onValueChange, section, modality}) {
       setNewDisease(selectedItem);
     } else if (selectedItem !== null && typeof selectedItem === 'object') {
       setDisease(selectedItem.name);
+      setNewImpression(selectedItem.impression)
+
       // Pass selected disease name to parent component.
       onValueChange(selectedItem.name);
+
     } else {
       // Clear the selected disease if nothing is selected.
       setDisease(null);
@@ -113,6 +116,7 @@ function AddFindings({onValueChange, section, modality}) {
     const newDiseaseData = {
       name: newDisease,
       findings: newFinding,
+      impression: impression,
       modality: modality,
       organ_section: section,
     };

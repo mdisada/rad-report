@@ -94,22 +94,13 @@ function Description({ onValueChange, section, modality, disease }) {
             const options = part.replace(/[\{\}]/g, "").split("/");
             const initialText = options[0]; // Extract initial text
             return (
-<FormGroup key={index} inline={true}>
-  <Select
-    items={options}
-    itemRenderer={renderOption}
-    onItemSelect={(item) => handleSelectChange(item, index)}
-    filterable={false}
-    popoverProps={{ minimal: true }}
-  >
-    <InputGroup
-      placeholder="Select..."
-      rightIcon="double-caret-vertical"
-      value={sentenceInputs[index]}
-      readOnly
-    />
-  </Select>
-</FormGroup>
+<select value={sentenceInputs[index] || ""} onChange={(e) => handleSelectChange(e.target.value, index)}>
+  {options.map((option, i) => (
+    <option key={i} value={option}>
+      {option}
+    </option>
+  ))}
+</select>
 
             );
           } else if (part === "#") {

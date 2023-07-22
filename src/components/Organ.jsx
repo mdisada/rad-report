@@ -1,15 +1,17 @@
 import { Stack } from '@mui/material'
 import React, { useRef, useContext, useState, useEffect } from 'react'
-import { EditableText, Button, Collapse, Icon } from "@blueprintjs/core"
+import { Tab, Tabs, Button, Collapse, Icon } from "@blueprintjs/core"
 import { IconNames } from "@blueprintjs/icons"
-import NormalOrAbnormal from "./Findings/NormalOrAbnormal"
 import { ReportFindingsContext } from "../contexts/ReportFindingsContext"
 import AddFindings from './Findings/AddFindings'
+import AddImpression from './Impression/AddImpression'
 
 export default function Organ({ section, modality, onDisplayChange }) {
   const name = section.charAt(0).toUpperCase() + section.slice(1);
   const [forDisplay, setForDisplay] = useState(name + ": "); 
   const [receivedFinding, setReceivedFinding] = useState("");
+  const [receivedImpression, setReceivedImpression] = useState("")
+  const [newImpression, setNewImpression] = useState([""])
   const [isOpen, setIsOpen] = useState(true); 
   const { state: reportFindings, dispatch } = useContext(ReportFindingsContext);
 
@@ -19,6 +21,10 @@ export default function Organ({ section, modality, onDisplayChange }) {
   const onValueChange = (finding) => {
     setReceivedFinding(finding);
   };
+
+  const handleReceivedImpression = (newImpression) => {
+    setReceivedImpression(newImpression)
+  }
 
   const handleAddClick = () => {
     setForDisplay(prevForDisplay => prevForDisplay + receivedFinding + " ");
@@ -83,11 +89,24 @@ export default function Organ({ section, modality, onDisplayChange }) {
       </div>
       <Collapse isOpen={isOpen}>
       <div style={{ padding: '10px' }}> 
-        <AddFindings
-         onValueChange={onValueChange}
-         section={section}
-         modality={modality}
-        />
+      <Tabs id="findingTabs">
+            <Tab id="findings" title="Findings" panel={
+              <AddFindings
+                onValueChange={onValueChange}
+                setNewImpression={setNewImpression}
+                section={section}
+                modality={modality}
+              />
+            } />
+            <Tab id="impressions" title="Impression" panel={
+              <AddImpression 
+              onValueChange={onValueChange}
+              section={section}
+              modality={modality}
+              newImpression={newImpression}
+              />
+            }  />
+          </Tabs>
       </div>
         <Stack spacing={2} direction="row">
           <Button intent="primary" onClick={handleAddClick}>
