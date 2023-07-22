@@ -6,7 +6,6 @@ import DescriptionModal from './DescriptionModal';
 import { Select } from "@blueprintjs/select";
 import { MenuItem , FormGroup, InputGroup } from "@blueprintjs/core";
 
-const SelectItem = Select.ofType();
 
 function Description({ onValueChange, section, modality, disease }) {
   const [sentences, setSentences] = useState([]);

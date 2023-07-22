@@ -68,7 +68,7 @@ function SelectTemplate () {
 
   return (
     <Card style={{ padding: "20px", width: "600px" }}>
-      <FormGroup label="Templates">
+      <FormGroup>
         <Suggest
           items={studies}
           fill ={ true}
