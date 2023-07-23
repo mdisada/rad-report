@@ -1,8 +1,7 @@
 import { Stack } from '@mui/material'
-import React, { useRef, useContext, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Tab, Tabs, Button, Collapse, Icon } from "@blueprintjs/core"
 import { IconNames } from "@blueprintjs/icons"
-import { ReportFindingsContext } from "../contexts/ReportFindingsContext"
 import AddFindings from './Findings/AddFindings'
 import AddImpression from './Impression/AddImpression'
 
@@ -13,8 +12,7 @@ export default function Organ({ section, modality, onDisplayChange }) {
   const [receivedImpression, setReceivedImpression] = useState("")
   const [impression, setImpression] = useState([""])
   const [isOpen, setIsOpen] = useState(true); 
-  const { state: reportFindings, dispatch } = useContext(ReportFindingsContext);
-
+  
   const textAreaRef = useRef()
 
 
@@ -49,8 +47,8 @@ export default function Organ({ section, modality, onDisplayChange }) {
 
 
   useEffect(() => {
-    onDisplayChange(section, forDisplay);
-  }, [forDisplay, onDisplayChange, section]);
+    onDisplayChange(forDisplay);
+  }, [forDisplay, onDisplayChange]);
 
   return (
     <div>
@@ -61,7 +59,7 @@ export default function Organ({ section, modality, onDisplayChange }) {
           onClick={handleLockClick}
           style={{ marginRight: '7px' }}
         />
-        <div style={{ flexGrow: 1 }}>
+        <div style={{ flexGrow: 1}}>
         <textarea
             ref={textAreaRef}
             value={forDisplay}
@@ -108,7 +106,7 @@ export default function Organ({ section, modality, onDisplayChange }) {
             }  />
           </Tabs>
       </div>
-        <Stack spacing={2} direction="row">
+        <Stack spacing={2} direction="row" paddingBottom={"30px"}>
           <Button intent="primary" onClick={handleAddClick}>
             Add to report
           </Button>

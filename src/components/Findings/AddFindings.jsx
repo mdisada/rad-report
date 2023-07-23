@@ -141,6 +141,7 @@ function AddFindings({onValueChange, section, modality, setImpression}) {
 
   return (
     <div>
+      <div>
       <Suggest
         items={diseases}
         itemRenderer={renderDisease}
@@ -160,6 +161,7 @@ function AddFindings({onValueChange, section, modality, setImpression}) {
         )}
         popoverProps={{ matchTargetWidth: true, minimal: true, usePortal: true, fill: true }}
       />
+      </div>
       <Dialog
         isOpen={isDialogOpen}
         onClose={handleDialogClose}
@@ -201,7 +203,7 @@ function AddFindings({onValueChange, section, modality, setImpression}) {
         </div>
       </Dialog>
       {disease && <Description onValueChange={onValueChange} section={section} disease={disease} modality={modality} diseaseMap={diseaseMap}/>}
-    </div>
+      </div>
   );
 }
 
