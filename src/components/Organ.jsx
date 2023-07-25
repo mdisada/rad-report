@@ -85,7 +85,7 @@ export default function Organ({ section, modality, onDisplayChange }) {
           /> */}
         </div>
       </div>
-      <Collapse isOpen={isOpen}>
+      <Collapse key={isOpen.toString()} isOpen={isOpen}>
       <div style={{ padding: '10px' }}> 
       <Tabs id="findingTabs">
             <Tab id="findings" title="Findings" panel={

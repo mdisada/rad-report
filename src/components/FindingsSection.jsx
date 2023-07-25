@@ -1,4 +1,5 @@
 import Organ from "./Organ";
+import ReportPage from "./Report/ReportPage"
 import { Button, TextareaAutosize } from "@mui/material";
 import { useState } from "react";
 
@@ -40,12 +41,8 @@ function FindingsSection(props) {
     <div>
       {!isReportGenerated && listSections}
       {isReportGenerated && 
-        <div>
-          <label>FINDINGS</label>
-          <textarea  rows={6} value={findingsReport} readOnly />
-          <label>IMPRESSION</label>
-          <textarea rows={6} />
-        </div>
+        <ReportPage findingsValue={findingsReport}></ReportPage>
+
       }
       <Button onClick={handleGenerateReport}>Generate</Button>
     </div>
