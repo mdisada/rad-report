@@ -13,12 +13,12 @@ def process_message(input_data):
     system_message = """
     
     You are an AI Radiology assistant tasked to help in creating reports. 
-    Given the following findings in a radiology report, give your primary impression, differential diagnosis, and recommendations. 
+    Given the following findings in a radiology report, give your primary diagnosis, other differential diagnosis, and recommendations.
     
     """
 
     
-    messages = [{"role": "user", "content": system_message },
+    messages = [{"role": "user", "content": system_message + input_data },
                 {"role": "user", "content": input_data },
                 ]
     response = openai.ChatCompletion.create(
@@ -32,10 +32,22 @@ def process_message(input_data):
     output_message = response["choices"][0]["message"]["content"]
     input_tokens = response["usage"]["prompt_tokens"]
     output_tokens = response["usage"]["completion_tokens"]
+    total_tokens = response["usage"]["total_tokens"]
+
+    cost = tokens_to_php(input_tokens, output_tokens, model)
+
+    print("input_data: ", input_data)
+
 
     print(output_message)
     
-    print(tokens_to_php(input_tokens, output_tokens, model))
+    
+    print(f"""
+          Input tokens: {input_tokens}
+          Output tokens: {output_tokens}
+          Total tokens: {total_tokens}
+          Cost: {cost}
+          """)
     
     return output_message
 
@@ -49,7 +61,9 @@ def tokens_to_php(input_tokens, output_tokens, model):
     output_usd = out_price * output_tokens/1000
     total_usd = input_usd + output_usd 
     
-    total_php = total_usd * CurrencyRates().get_rate('USD', 'PHP')
+    exchange_rate = 54.56
+    
+    total_php = total_usd * exchange_rate
     
     return "Total cost: ₱" + str(total_php)
 
