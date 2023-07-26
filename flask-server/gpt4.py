@@ -1,45 +1,56 @@
 import openai, config
-from pdfquery import PDFQuery
 
+from forex_python.converter import CurrencyRates
 
-
-pdf = PDFQuery('')
-pdf.load()
-text_elements = pdf.pq('LTTextLineHorizontal')
-text_list = [t.text for t in text_elements]
 
 
 openai.api_key = config.OPEN_API_KEY
 
-text = ""
-
-for line in text_list:
-    if line == '':
-        pass
-    else:
-        text = text + line + '\n'
-print(text)
+model = 'gpt-3.5-turbo'
 
 
-messages = []
-system_msg = input("What type of chatbot would you like to create?\n")
-messages.append({"role": "user", "content": system_msg})
-
-print("Your new assistant is ready!")
-
-while input != "quit()":
-    message = "Create an abstract for a Radiology journal using the following research paper: " + text
-    messages.append({"role": "user", "content": message})
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=messages
-    )
-    reply = response["choices"][0]["messages"]["content"]
-    messages.append({"role":"assistant","content": reply})
-    print("\n" + reply + "\n")
-
-def process_message(input_message):
+def process_message(input_data):
+    system_message = """
     
-    output_message = ""
+    You are an AI Radiology assistant tasked to help in creating reports. 
+    Given the following findings in a radiology report, give your primary impression, differential diagnosis, and recommendations. 
+    
+    """
+
+    
+    messages = [{"role": "user", "content": system_message },
+                {"role": "user", "content": input_data },
+                ]
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=messages,
+        temperature=0.2,
+        max_tokens=1000,
+        frequency_penalty = 0.0
+    )
+    
+    output_message = response["choices"][0]["message"]["content"]
+    input_tokens = response["usage"]["prompt_tokens"]
+    output_tokens = response["usage"]["completion_tokens"]
+
+    print(output_message)
+    
+    print(tokens_to_php(input_tokens, output_tokens, model))
     
     return output_message
+
+def tokens_to_php(input_tokens, output_tokens, model):
+    
+    if model == "gpt-3.5-turbo":
+        in_price = 0.00015
+        out_price = 0.002
+    
+    input_usd = in_price * input_tokens/1000
+    output_usd = out_price * output_tokens/1000
+    total_usd = input_usd + output_usd 
+    
+    total_php = total_usd * CurrencyRates().get_rate('USD', 'PHP')
+    
+    return "Total cost: ₱" + str(total_php)
+
+    
