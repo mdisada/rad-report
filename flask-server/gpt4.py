@@ -14,7 +14,7 @@ def process_message(input_data):
     
     You are an AI Radiology assistant tasked to help in creating reports. 
     Given the following findings in a radiology report, give your primary diagnosis, other differential diagnosis, and recommendations.
-    
+    Make it brief
     """
 
     
