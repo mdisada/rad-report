@@ -66,6 +66,6 @@ def tokens_to_php(input_tokens, output_tokens, model):
     
     total_php = total_usd * exchange_rate
     
-    return "Total cost: ₱" + str(total_php)
+    return str(total_php)
 
     
