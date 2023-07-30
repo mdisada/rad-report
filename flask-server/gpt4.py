@@ -1,15 +1,25 @@
-import openai, config
-
-from forex_python.converter import CurrencyRates
-
-
+import openai, config, pickle, os, torch
+import numpy as np
+from langchain.embeddings import HuggingFaceInstructEmbeddings
 
 openai.api_key = config.OPEN_API_KEY
 
 model = 'gpt-3.5-turbo'
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+def load_embeddings():
+    with open('./flask-server/faiss_instructEmbeddings.pkl', 'rb') as f:
+        vectorStore = torch.load(f, map_location=device)
+    return vectorStore
 
 def process_message(input_data):
+    
+    embedding = load_embeddings()
+    retriever = embedding.as_retriever(search_kwargs={"k": 3})
+    
+    print(retriever.search_type)
+    
     system_message = """
     
     You are an AI Radiology assistant tasked to help in creating reports. 
@@ -17,6 +27,10 @@ def process_message(input_data):
     Make it brief
 
     """
+
+    docs = retriever.get_relevant_documents(input_data)
+    
+    print(docs)
 
     
     messages = [{"role": "user", "content": system_message + input_data },
@@ -26,7 +40,7 @@ def process_message(input_data):
         model=model,
         messages=messages,
         temperature=0.2,
-        max_tokens=1000,
+        max_tokens=2000,
         frequency_penalty = 0.0
     )
     
