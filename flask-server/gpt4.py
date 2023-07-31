@@ -6,19 +6,19 @@ openai.api_key = config.OPEN_API_KEY
 
 model = 'gpt-3.5-turbo'
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-def load_embeddings():
-    with open('./flask-server/faiss_instructEmbeddings.pkl', 'rb') as f:
-        vectorStore = torch.load(f, map_location=device)
-    return vectorStore
+# def load_embeddings():
+#     with open('./flask-server/faiss_instructEmbeddings.pkl', 'rb') as f:
+#         vectorStore = torch.load(f, map_location=device)
+#     return vectorStore
 
 def process_message(input_data):
     
-    embedding = load_embeddings()
-    retriever = embedding.as_retriever(search_kwargs={"k": 3})
+    # embedding = load_embeddings()
+    # retriever = embedding.as_retriever(search_kwargs={"k": 3})
     
-    print(retriever.search_type)
+    # print(retriever.search_type)
     
     system_message = """
     
@@ -28,9 +28,9 @@ def process_message(input_data):
 
     """
 
-    docs = retriever.get_relevant_documents(input_data)
+    # docs = retriever.get_relevant_documents(input_data)
     
-    print(docs)
+    # print(docs)
 
     
     messages = [{"role": "user", "content": system_message + input_data },
