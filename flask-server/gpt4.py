@@ -61,7 +61,7 @@ def process_message(input_data):
           Input tokens: {input_tokens}
           Output tokens: {output_tokens}
           Total tokens: {total_tokens}
-          Cost: {cost}
+          Cost: ₱{cost}
           """)
     
     return output_message
