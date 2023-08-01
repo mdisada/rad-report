@@ -9,7 +9,7 @@ model = 'gpt-3.5-turbo'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def load_embeddings():
-     with open('./flask-server/faiss_instructEmbeddings_cpu.pkl', 'rb') as f:
+     with open('./flask-server/faiss_instructEmbeddings_cpu_all.pkl', 'rb') as f:
          vectorStore = torch.load(f, map_location='cpu')
      return vectorStore
 

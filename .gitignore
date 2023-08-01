@@ -3,6 +3,9 @@
 #config
 /flask-server/config.py
 
+#embeddings
+*.pkl
+
 # dependencies
 /node_modules
 /.pnp
